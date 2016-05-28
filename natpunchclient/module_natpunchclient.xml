@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_natpunchclient" default="compile.module.natpunchclient">
+  <dirname property="module.natpunchclient.basedir" file="${ant.file.module_natpunchclient}"/>
+  
+  <property name="module.jdk.home.natpunchclient" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.natpunchclient" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.natpunchclient" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.natpunchclient" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="natpunchclient.output.dir" value="${module.natpunchclient.basedir}/../out/production/natpunchclient"/>
+  <property name="natpunchclient.testoutput.dir" value="${module.natpunchclient.basedir}/../out/test/natpunchclient"/>
+  
+  <path id="natpunchclient.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="natpunchclient.module.production.classpath">
+    <path refid="${module.jdk.classpath.natpunchclient}"/>
+    <pathelement location="${libnatpunch.output.dir}"/>
+  </path>
+  
+  <path id="natpunchclient.runtime.production.module.classpath">
+    <pathelement location="${natpunchclient.output.dir}"/>
+    <path refid="libnatpunch.runtime.production.module.classpath"/>
+  </path>
+  
+  <path id="natpunchclient.module.classpath">
+    <path refid="${module.jdk.classpath.natpunchclient}"/>
+    <pathelement location="${natpunchclient.output.dir}"/>
+    <pathelement location="${libnatpunch.testoutput.dir}"/>
+    <pathelement location="${libnatpunch.output.dir}"/>
+  </path>
+  
+  <path id="natpunchclient.runtime.module.classpath">
+    <pathelement location="${natpunchclient.testoutput.dir}"/>
+    <pathelement location="${natpunchclient.output.dir}"/>
+    <path refid="libnatpunch.runtime.module.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.natpunchclient">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.natpunchclient">
+    <patternset refid="excluded.from.module.natpunchclient"/>
+  </patternset>
+  
+  <path id="natpunchclient.module.sourcepath">
+    <dirset dir="${module.natpunchclient.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.natpunchclient" depends="compile.module.natpunchclient.production,compile.module.natpunchclient.tests" description="Compile module natpunchclient"/>
+  
+  <target name="compile.module.natpunchclient.production" depends="register.custom.compilers,compile.module.libnatpunch" description="Compile module natpunchclient; production classes">
+    <mkdir dir="${natpunchclient.output.dir}"/>
+    <javac2 destdir="${natpunchclient.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.natpunchclient}/javac">
+      <compilerarg line="${compiler.args.natpunchclient}"/>
+      <bootclasspath refid="natpunchclient.module.bootclasspath"/>
+      <classpath refid="natpunchclient.module.production.classpath"/>
+      <src refid="natpunchclient.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.natpunchclient"/>
+    </javac2>
+    
+    <copy todir="${natpunchclient.output.dir}">
+      <fileset dir="${module.natpunchclient.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.natpunchclient.tests" depends="register.custom.compilers,compile.module.natpunchclient.production" description="compile module natpunchclient; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.natpunchclient" description="cleanup module">
+    <delete dir="${natpunchclient.output.dir}"/>
+    <delete dir="${natpunchclient.testoutput.dir}"/>
+  </target>
+</project>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_libnatpunch" default="compile.module.libnatpunch">
+  <dirname property="module.libnatpunch.basedir" file="${ant.file.module_libnatpunch}"/>
+  
+  <property name="module.jdk.home.libnatpunch" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.libnatpunch" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.libnatpunch" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.libnatpunch" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="libnatpunch.output.dir" value="${module.libnatpunch.basedir}/out/production/libnatpunch"/>
+  <property name="libnatpunch.testoutput.dir" value="${module.libnatpunch.basedir}/out/test/libnatpunch"/>
+  
+  <path id="libnatpunch.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="libnatpunch.module.production.classpath">
+    <path refid="${module.jdk.classpath.libnatpunch}"/>
+  </path>
+  
+  <path id="libnatpunch.runtime.production.module.classpath">
+    <pathelement location="${libnatpunch.output.dir}"/>
+  </path>
+  
+  <path id="libnatpunch.module.classpath">
+    <path refid="${module.jdk.classpath.libnatpunch}"/>
+    <pathelement location="${libnatpunch.output.dir}"/>
+  </path>
+  
+  <path id="libnatpunch.runtime.module.classpath">
+    <pathelement location="${libnatpunch.testoutput.dir}"/>
+    <pathelement location="${libnatpunch.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.libnatpunch">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.libnatpunch">
+    <patternset refid="excluded.from.module.libnatpunch"/>
+  </patternset>
+  
+  <path id="libnatpunch.module.sourcepath">
+    <dirset dir="${module.libnatpunch.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.libnatpunch" depends="compile.module.libnatpunch.production,compile.module.libnatpunch.tests" description="Compile module libnatpunch"/>
+  
+  <target name="compile.module.libnatpunch.production" depends="register.custom.compilers" description="Compile module libnatpunch; production classes">
+    <mkdir dir="${libnatpunch.output.dir}"/>
+    <javac2 destdir="${libnatpunch.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.libnatpunch}/javac">
+      <compilerarg line="${compiler.args.libnatpunch}"/>
+      <bootclasspath refid="libnatpunch.module.bootclasspath"/>
+      <classpath refid="libnatpunch.module.production.classpath"/>
+      <src refid="libnatpunch.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.libnatpunch"/>
+    </javac2>
+    
+    <copy todir="${libnatpunch.output.dir}">
+      <fileset dir="${module.libnatpunch.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.libnatpunch.tests" depends="register.custom.compilers,compile.module.libnatpunch.production" description="compile module libnatpunch; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.libnatpunch" description="cleanup module">
+    <delete dir="${libnatpunch.output.dir}"/>
+    <delete dir="${libnatpunch.testoutput.dir}"/>
+  </target>
+</project>

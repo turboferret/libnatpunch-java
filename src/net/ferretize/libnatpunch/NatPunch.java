@@ -71,6 +71,7 @@ public class NatPunch implements Runnable {
         setLogHandler(new StdoutLogHandler());
 
         endPointHandler = new EndPointHandler();
+
     }
 
     public void setIntroducer(InetAddress address, int port, byte []id) {
@@ -124,7 +125,7 @@ public class NatPunch implements Runnable {
     @Override
     public void run() {
         long timeNow = new Date().getTime(), timeLastPing = timeNow, lastCheckWorkerThreadRunning = timeNow;
-        int receiveLength = 0;
+        int receiveLength;
         AtomicReference<InetSocketAddress> receiveAddress = new AtomicReference<>();
         byte []receiveBuffer = new byte[2048];
         EndPoint receiveEndPoint;
